@@ -83,11 +83,17 @@
   }
   .cover:hover .play { filter:brightness(1.08); }
   .cover:focus-visible { outline:2px solid #43C395; outline-offset:-4px; }
+  /* Opaque, not a gradient: the title text bled through the fade. */
   .titlebar {
-    position:absolute; top:0; left:0; right:0; height:58px; z-index:4;
-    background:linear-gradient(#000 55%, rgba(0,0,0,0)); pointer-events:none;
+    position:absolute; top:0; left:0; right:0; height:56px; z-index:4;
+    background:#000; pointer-events:none;
   }
-  .hotspot { position:absolute; top:0; left:0; width:58%; height:44px; z-index:4; }
+  .hotspot { position:absolute; top:0; left:0; width:58%; height:52px; z-index:4; }
+  /* YouTube's "More videos" panel: its thumbnails carry other matches' scores. */
+  .relmask {
+    position:absolute; right:0; bottom:0; width:46%; height:74px; z-index:4;
+    background:#000; pointer-events:none;
+  }
 
   .bar {
     display:flex; align-items:center; gap:14px; flex-wrap:wrap;
@@ -177,6 +183,7 @@
     <div class="stage" id="stage">
       <div class="titlebar"></div>
       <div class="hotspot"></div>
+      <div class="relmask"></div>
       <button class="cover" id="cover" type="button">
         <span class="play" aria-hidden="true"></span>
         <span class="label" id="coverLabel">Play the weekend</span>
