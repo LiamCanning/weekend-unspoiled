@@ -1,4 +1,7 @@
 <title>Weekend Unspoiled</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://www.youtube-nocookie.com">
+<link rel="preconnect" href="https://www.youtube.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap">
@@ -6,114 +9,157 @@
   :root {
     --bg:#E7EBE8; --surface:#FDFEFD; --line:#CBD5CF; --line-soft:#DDE4DF;
     --ink:#0F1D18; --muted:#5A6C64; --accent:#0C6B4C; --accent-ink:#FFFFFF;
-    --warn:#8A5320; --warn-bg:#F0E2D2;
-    --shadow:0 1px 2px rgba(15,29,24,.06);
+    --warn:#8A5320; --warn-bg:#F0E2D2; --done:#8FA79C;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg:#0B1211; --surface:#131C19; --line:#2A3833; --line-soft:#1E2A26;
       --ink:#E4EDE8; --muted:#8A9C94; --accent:#43C395; --accent-ink:#07130F;
-      --warn:#D9A167; --warn-bg:#2C2318;
-      --shadow:none;
+      --warn:#D9A167; --warn-bg:#2C2318; --done:#4A5D56;
     }
   }
   :root[data-theme="dark"] {
     --bg:#0B1211; --surface:#131C19; --line:#2A3833; --line-soft:#1E2A26;
     --ink:#E4EDE8; --muted:#8A9C94; --accent:#43C395; --accent-ink:#07130F;
-    --warn:#D9A167; --warn-bg:#2C2318;
-    --shadow:none;
+    --warn:#D9A167; --warn-bg:#2C2318; --done:#4A5D56;
   }
 
   * { box-sizing:border-box; }
   body {
     margin:0; background:var(--bg); color:var(--ink);
     font-family:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-    font-size:16px; line-height:1.5;
-    -webkit-font-smoothing:antialiased;
+    font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
   }
-  .wrap { max-width:620px; margin:0 auto; padding:32px 20px 72px; }
+  .wrap { max-width:760px; margin:0 auto; padding:26px 18px 72px; }
 
-  header { display:flex; flex-direction:column; gap:14px; padding-bottom:22px; }
+  header { display:flex; flex-direction:column; gap:12px; }
   .stamp {
-    align-self:flex-start; font-family:"IBM Plex Mono", ui-monospace, monospace;
-    font-size:11px; letter-spacing:.14em; text-transform:uppercase;
-    color:var(--accent); border:1px solid currentColor; border-radius:2px;
-    padding:4px 9px;
+    align-self:flex-start; font-family:"IBM Plex Mono", monospace; font-size:11px;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--accent);
+    border:1px solid currentColor; border-radius:2px; padding:4px 9px;
   }
   h1 {
-    font-family:"Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
-    font-weight:700; font-size:clamp(34px,8vw,46px); line-height:1.02;
-    letter-spacing:-.02em; margin:0; text-wrap:balance;
+    font-family:"Bricolage Grotesque", sans-serif; font-weight:700;
+    font-size:clamp(30px,7vw,42px); line-height:1.02; letter-spacing:-.02em;
+    margin:0; text-wrap:balance;
   }
-  .standfirst { margin:0; color:var(--muted); max-width:46ch; }
-  .standfirst b { color:var(--ink); font-weight:500; }
-  .ledger {
-    display:flex; gap:0; margin-top:6px; border-top:1px solid var(--line);
-    border-bottom:1px solid var(--line);
+  .standfirst { margin:0; color:var(--muted); max-width:52ch; }
+
+  /* ---- stage ---- */
+  .stage-wrap { margin:20px 0 6px; }
+  .now {
+    display:flex; align-items:baseline; gap:10px; margin:0 0 8px; min-height:26px;
   }
-  .ledger div { flex:1; padding:12px 0; }
-  .ledger div + div { border-left:1px solid var(--line-soft); padding-left:14px; }
-  .ledger dt {
-    font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:10px;
-    letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin:0;
+  .now .lg {
+    font-family:"IBM Plex Mono", monospace; font-size:10.5px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--accent); flex-shrink:0;
   }
-  .ledger dd {
-    margin:3px 0 0; font-family:"Bricolage Grotesque", sans-serif; font-weight:700;
-    font-size:22px; font-variant-numeric:tabular-nums;
+  .now .fx {
+    font-family:"Bricolage Grotesque", sans-serif; font-weight:600; font-size:19px;
+    letter-spacing:-.01em;
+  }
+  .stage {
+    position:relative; aspect-ratio:16/9; width:100%; background:#000;
+    border:1px solid var(--line); border-radius:4px; overflow:hidden;
+  }
+  .stage iframe { position:absolute; inset:0; width:100%; height:100%; border:0; z-index:1; }
+  .cover {
+    position:absolute; inset:0; z-index:5; background:#0B1211; color:#E4EDE8;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:13px; cursor:pointer; border:0; width:100%; font:inherit; padding:20px;
+  }
+  .cover[hidden] { display:none; }
+  .cover .play {
+    width:62px; height:62px; border-radius:50%; background:#43C395;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .cover .play::after {
+    content:""; width:0; height:0; margin-left:5px; border-left:19px solid #07130F;
+    border-top:12px solid transparent; border-bottom:12px solid transparent;
+  }
+  .cover .label {
+    font-family:"IBM Plex Mono", monospace; font-size:11px; letter-spacing:.16em;
+    text-transform:uppercase; color:#8A9C94;
+  }
+  .cover:hover .play { filter:brightness(1.08); }
+  .cover:focus-visible { outline:2px solid #43C395; outline-offset:-4px; }
+  .titlebar {
+    position:absolute; top:0; left:0; right:0; height:58px; z-index:4;
+    background:linear-gradient(#000 55%, rgba(0,0,0,0)); pointer-events:none;
+  }
+  .hotspot { position:absolute; top:0; left:0; width:58%; height:44px; z-index:4; }
+
+  .bar {
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    padding:11px 0 0; border-bottom:1px solid var(--line); padding-bottom:14px;
+  }
+  .btn {
+    display:inline-flex; align-items:center; gap:7px; font:inherit; font-size:13px;
+    background:var(--accent); color:var(--accent-ink); border:0; border-radius:3px;
+    padding:8px 14px; cursor:pointer;
+  }
+  .btn.ghost { background:transparent; color:var(--ink); border:1px solid var(--line); }
+  .btn:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
+  .tally {
+    font-family:"IBM Plex Mono", monospace; font-size:11.5px; color:var(--muted);
+    font-variant-numeric:tabular-nums; margin-left:auto;
   }
 
-  .league { margin-top:38px; }
-  .eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:4px; }
+  /* ---- queue ---- */
+  .league { margin-top:28px; }
+  .eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:2px; }
   .eyebrow span {
-    font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:11px;
-    letter-spacing:.16em; text-transform:uppercase; color:var(--muted);
+    font-family:"IBM Plex Mono", monospace; font-size:11px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--muted);
   }
   .eyebrow i { flex:1; height:1px; background:var(--line); }
   .eyebrow .n { color:var(--accent); }
-
   .matches { list-style:none; margin:0; padding:0; }
-  .match { border-bottom:1px solid var(--line-soft); }
-  .row { display:flex; align-items:flex-start; gap:16px; padding:16px 0; }
-  .who { flex:1; min-width:0; }
-  .who h3 {
-    font-family:"Bricolage Grotesque", sans-serif; font-weight:500;
-    font-size:20px; line-height:1.2; letter-spacing:-.01em; margin:0;
-    text-wrap:balance;
+  .matches li { border-bottom:1px solid var(--line-soft); }
+  .row {
+    display:flex; align-items:center; gap:13px; width:100%; padding:13px 4px;
+    background:none; border:0; font:inherit; color:inherit; cursor:pointer;
+    text-align:left;
   }
+  .row:hover { background:var(--line-soft); }
+  .row:focus-visible { outline:2px solid var(--accent); outline-offset:-2px; }
+  .tick {
+    width:16px; height:16px; border:1.5px solid var(--line); border-radius:50%;
+    flex-shrink:0; position:relative;
+  }
+  .row.done .tick { background:var(--done); border-color:var(--done); }
+  .row.done .tick::after {
+    content:""; position:absolute; left:4.5px; top:1.5px; width:4px; height:8px;
+    border:solid var(--surface); border-width:0 1.6px 1.6px 0; transform:rotate(45deg);
+  }
+  .row.playing .tick { background:var(--accent); border-color:var(--accent); }
+  .who { flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; }
+  .fx {
+    font-family:"Bricolage Grotesque", sans-serif; font-weight:500; font-size:17.5px;
+    line-height:1.2; letter-spacing:-.01em;
+  }
+  .row.done .fx { color:var(--muted); }
   .when {
-    margin:5px 0 0; font-family:"IBM Plex Mono", ui-monospace, monospace;
-    font-size:11.5px; color:var(--muted); display:flex; flex-wrap:wrap;
-    align-items:center; gap:8px;
+    font-family:"IBM Plex Mono", monospace; font-size:11px; color:var(--muted);
+    display:flex; align-items:center; gap:8px;
   }
-  .chip {
-    background:var(--warn-bg); color:var(--warn); border-radius:2px;
-    padding:2px 6px; font-size:10px; letter-spacing:.04em;
+  .mine {
+    background:var(--warn-bg); color:var(--warn); border-radius:2px; padding:1px 5px;
+    font-size:9.5px; letter-spacing:.06em; text-transform:uppercase;
   }
-  .act { display:flex; flex-direction:column; align-items:flex-end; gap:7px; flex-shrink:0; }
   .dur {
-    font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:12px;
-    color:var(--muted); font-variant-numeric:tabular-nums;
+    font-family:"IBM Plex Mono", monospace; font-size:12px; color:var(--muted);
+    font-variant-numeric:tabular-nums; flex-shrink:0;
   }
-  .go {
-    display:inline-flex; align-items:center; gap:7px; font:inherit; font-size:13px;
-    background:var(--accent); color:var(--accent-ink); border:0; border-radius:3px;
-    padding:7px 13px; cursor:pointer; text-decoration:none; box-shadow:var(--shadow);
-  }
-  .go:hover { filter:brightness(1.08); }
-  .go:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
-  .go.out { background:transparent; color:var(--warn); border:1px solid var(--warn); }
-  .go.dead { background:transparent; color:var(--muted); border:1px dashed var(--line); cursor:default; }
-  .tri {
-    width:0; height:0; border-left:7px solid currentColor;
-    border-top:4.5px solid transparent; border-bottom:4.5px solid transparent;
-  }
-  .go.dead .tri { display:none; }
 
-
+  .dead-note {
+    margin:26px 0 0; font-size:12.5px; color:var(--warn); background:var(--warn-bg);
+    padding:11px 13px; border-radius:3px; line-height:1.5;
+  }
   footer {
-    margin-top:46px; padding-top:18px; border-top:1px solid var(--line);
-    font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:11px;
-    color:var(--muted); line-height:1.7;
+    margin-top:34px; padding-top:16px; border-top:1px solid var(--line);
+    font-family:"IBM Plex Mono", monospace; font-size:11px; color:var(--muted);
+    line-height:1.7;
   }
   @media (prefers-reduced-motion:reduce) { * { transition:none !important; } }
 </style>
@@ -122,203 +168,313 @@
   <header>
     <span class="stamp">Results embargoed</span>
     <h1>The weekend, without the scores</h1>
-    <p class="standfirst">Twelve matches from the top five, picked before kick-off on who was
-      playing, never on how it went. <b>Nothing on this page tells you a result.</b></p>
-    <dl class="ledger">
-      <div><dt>Matches</dt><dd>12</dd></div>
-      <div><dt>Runtime</dt><dd>42 min</dd></div>
-      <div><dt>Leagues</dt><dd>5</dd></div>
-    </dl>
+    <p class="standfirst">Picked before kick-off on who was playing, never on how it went.
+      Press play and it runs straight through.</p>
   </header>
 
-    <section class="league">
-      <div class="eyebrow"><span>Premier League</span><i></i><span class="n">4</span></div>
-      <ul class="matches">
-      <li class="match">
-        <div class="row">
-          <div class="who">
-            <h3>Arsenal v Chelsea</h3>
-            <p class="when">Sun 6 Sep, 17:30</p>
-          </div>
-          <div class="act">
+  <div class="stage-wrap">
+    <p class="now"><span class="lg" id="nowLg"></span><span class="fx" id="nowFx"></span></p>
+    <div class="stage" id="stage">
+      <div class="titlebar"></div>
+      <div class="hotspot"></div>
+      <button class="cover" id="cover" type="button">
+        <span class="play" aria-hidden="true"></span>
+        <span class="label" id="coverLabel">Play the weekend</span>
+      </button>
+    </div>
+    <div class="bar">
+      <button class="btn" id="playAll" type="button">Play all</button>
+      <button class="btn ghost" id="next" type="button">Skip</button>
+      <button class="btn ghost" id="reset" type="button">Clear watched</button>
+      <span class="tally" id="tally"></span>
+    </div>
+  </div>
+
+      <section class="league">
+        <div class="eyebrow"><span>Premier League</span><i></i><span class="n">4</span></div>
+        <ul class="matches">
+        <li>
+          <button class="row" data-v="af99CJ4f_yc">
+            <span class="tick" aria-hidden="true"></span>
+            <span class="who">
+              <span class="fx">Arsenal v Chelsea</span>
+              <span class="when">Sun 6 Sep, 17:30</span>
+            </span>
             <span class="dur">2:00</span>
-            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=nALnEAhBCY4&t=Arsenal+v+Chelsea&c=Premier+League" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
-          </div>
-        </div>
-
-      </li>
-      <li class="match">
-        <div class="row">
-          <div class="who">
-            <h3>Everton v Manchester United</h3>
-            <p class="when">Sun 6 Sep, 15:00</p>
-          </div>
-          <div class="act">
+          </button>
+        </li>
+        <li>
+          <button class="row" data-v="Qn1UCyqzzBI">
+            <span class="tick" aria-hidden="true"></span>
+            <span class="who">
+              <span class="fx">Everton v Manchester United</span>
+              <span class="when">Sun 6 Sep, 15:00</span>
+            </span>
             <span class="dur">2:21</span>
-            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=Qn1UCyqzzBI&t=Everton+v+Manchester+United&c=Premier+League" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
-          </div>
-        </div>
-
-      </li>
-      <li class="match">
-        <div class="row">
-          <div class="who">
-            <h3>Ipswich Town v Liverpool</h3>
-            <p class="when">Fri 4 Sep, 21:00</p>
-          </div>
-          <div class="act">
+          </button>
+        </li>
+        <li>
+          <button class="row" data-v="dZgMJj37UNM">
+            <span class="tick" aria-hidden="true"></span>
+            <span class="who">
+              <span class="fx">Ipswich Town v Liverpool</span>
+              <span class="when">Fri 4 Sep, 21:00</span>
+            </span>
             <span class="dur">2:16</span>
-            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=dZgMJj37UNM&t=Ipswich+Town+v+Liverpool&c=Premier+League" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
-          </div>
-        </div>
-
-      </li>
-      <li class="match">
-        <div class="row">
-          <div class="who">
-            <h3>Manchester City v Coventry City</h3>
-            <p class="when">Sat 5 Sep, 16:00<span class="chip">spoils: no embed allowed</span></p>
-          </div>
-          <div class="act">
-            <span class="dur">3:29</span>
-            <a class="go out" href="https://www.youtube.com/watch?v=Wi5InREhnKQ" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>YouTube</a>
-          </div>
-        </div>
-
-      </li>
-      </ul>
-    </section>
-    <section class="league">
-      <div class="eyebrow"><span>LaLiga</span><i></i><span class="n">2</span></div>
-      <ul class="matches">
-      <li class="match">
-        <div class="row">
-          <div class="who">
-            <h3>Real Betis v Real Madrid</h3>
-            <p class="when">Fri 4 Sep, 21:00</p>
-          </div>
-          <div class="act">
+          </button>
+        </li>
+        <li>
+          <button class="row" data-v="HpeCCugYpsU">
+            <span class="tick" aria-hidden="true"></span>
+            <span class="who">
+              <span class="fx">Newcastle United v AFC Bournemouth</span>
+              <span class="when">Sat 5 Sep, 13:30</span>
+            </span>
+            <span class="dur">2:04</span>
+          </button>
+        </li>
+        </ul>
+      </section>
+      <section class="league">
+        <div class="eyebrow"><span>LaLiga</span><i></i><span class="n">2</span></div>
+        <ul class="matches">
+        <li>
+          <button class="row" data-v="Opwiy1igObg">
+            <span class="tick" aria-hidden="true"></span>
+            <span class="who">
+              <span class="fx">Real Betis v Real Madrid</span>
+              <span class="when">Fri 4 Sep, 21:00</span>
+            </span>
             <span class="dur">3:30</span>
-            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=Opwiy1igObg&t=Real+Betis+v+Real+Madrid&c=LaLiga" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
-          </div>
-        </div>
-
-      </li>
-      <li class="match">
-        <div class="row">
-          <div class="who">
-            <h3>Athletic Club v Atlético Madrid</h3>
-            <p class="when">Sat 5 Sep, 16:15</p>
-          </div>
-          <div class="act">
+          </button>
+        </li>
+        <li>
+          <button class="row" data-v="_XYstO1MTdg">
+            <span class="tick" aria-hidden="true"></span>
+            <span class="who">
+              <span class="fx">Athletic Club v Atlético Madrid</span>
+              <span class="when">Sat 5 Sep, 16:15</span>
+            </span>
             <span class="dur">3:30</span>
-            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=_XYstO1MTdg&t=Athletic+Club+v+Atl%C3%A9tico+Madrid&c=LaLiga" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
-          </div>
-        </div>
-
-      </li>
-      </ul>
-    </section>
-    <section class="league">
-      <div class="eyebrow"><span>Serie A</span><i></i><span class="n">2</span></div>
-      <ul class="matches">
-      <li class="match">
-        <div class="row">
-          <div class="who">
-            <h3>Inter v Napoli</h3>
-            <p class="when">Sat 5 Sep, 18:00</p>
-          </div>
-          <div class="act">
+          </button>
+        </li>
+        </ul>
+      </section>
+      <section class="league">
+        <div class="eyebrow"><span>Serie A</span><i></i><span class="n">2</span></div>
+        <ul class="matches">
+        <li>
+          <button class="row" data-v="yDrJbKNnk9E">
+            <span class="tick" aria-hidden="true"></span>
+            <span class="who">
+              <span class="fx">Inter v Napoli</span>
+              <span class="when">Sat 5 Sep, 18:00</span>
+            </span>
             <span class="dur">2:58</span>
-            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=yDrJbKNnk9E&t=Inter+v+Napoli&c=Serie+A" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
-          </div>
-        </div>
-
-      </li>
-      <li class="match">
-        <div class="row">
-          <div class="who">
-            <h3>Roma v Atalanta</h3>
-            <p class="when">Sat 5 Sep, 20:45</p>
-          </div>
-          <div class="act">
+          </button>
+        </li>
+        <li>
+          <button class="row" data-v="BcGJd0fz4WY">
+            <span class="tick" aria-hidden="true"></span>
+            <span class="who">
+              <span class="fx">Roma v Atalanta</span>
+              <span class="when">Sat 5 Sep, 20:45</span>
+            </span>
             <span class="dur">2:27</span>
-            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=BcGJd0fz4WY&t=Roma+v+Atalanta&c=Serie+A" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
-          </div>
-        </div>
-
-      </li>
-      </ul>
-    </section>
-    <section class="league">
-      <div class="eyebrow"><span>Bundesliga</span><i></i><span class="n">2</span></div>
-      <ul class="matches">
-      <li class="match">
-        <div class="row">
-          <div class="who">
-            <h3>Werder Bremen v RB Leipzig</h3>
-            <p class="when">Sat 5 Sep, 15:30</p>
-          </div>
-          <div class="act">
+          </button>
+        </li>
+        </ul>
+      </section>
+      <section class="league">
+        <div class="eyebrow"><span>Bundesliga</span><i></i><span class="n">2</span></div>
+        <ul class="matches">
+        <li>
+          <button class="row" data-v="ijK7-NuPkzk">
+            <span class="tick" aria-hidden="true"></span>
+            <span class="who">
+              <span class="fx">Werder Bremen v RB Leipzig</span>
+              <span class="when">Sat 5 Sep, 15:30</span>
+            </span>
             <span class="dur">2:59</span>
-            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=ijK7-NuPkzk&t=Werder+Bremen+v+RB+Leipzig&c=Bundesliga" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
-          </div>
-        </div>
-
-      </li>
-      <li class="match">
-        <div class="row">
-          <div class="who">
-            <h3>Hoffenheim v Borussia Dortmund</h3>
-            <p class="when">Sat 5 Sep, 15:30</p>
-          </div>
-          <div class="act">
+          </button>
+        </li>
+        <li>
+          <button class="row" data-v="bpC3DSulZAw">
+            <span class="tick" aria-hidden="true"></span>
+            <span class="who">
+              <span class="fx">Hoffenheim v Borussia Dortmund</span>
+              <span class="when">Sat 5 Sep, 15:30</span>
+            </span>
             <span class="dur">4:01</span>
-            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=bpC3DSulZAw&t=Hoffenheim+v+Borussia+Dortmund&c=Bundesliga" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
-          </div>
-        </div>
-
-      </li>
-      </ul>
-    </section>
-    <section class="league">
-      <div class="eyebrow"><span>Ligue 1</span><i></i><span class="n">2</span></div>
-      <ul class="matches">
-      <li class="match">
-        <div class="row">
-          <div class="who">
-            <h3>Paris Saint-Germain v Monaco</h3>
-            <p class="when">Fri 4 Sep, 21:05</p>
-          </div>
-          <div class="act">
+          </button>
+        </li>
+        </ul>
+      </section>
+      <section class="league">
+        <div class="eyebrow"><span>Ligue 1</span><i></i><span class="n">1</span></div>
+        <ul class="matches">
+        <li>
+          <button class="row" data-v="r6jl85nSRyA">
+            <span class="tick" aria-hidden="true"></span>
+            <span class="who">
+              <span class="fx">Paris Saint-Germain v Monaco</span>
+              <span class="when">Fri 4 Sep, 21:05</span>
+            </span>
             <span class="dur">8:10</span>
-            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=r6jl85nSRyA&t=Paris+Saint-Germain+v+Monaco&c=Ligue+1" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
-          </div>
-        </div>
+          </button>
+        </li>
+        </ul>
+      </section>
 
-      </li>
-      <li class="match">
-        <div class="row">
-          <div class="who">
-            <h3>Marseille v Paris FC</h3>
-            <p class="when">Sun 6 Sep, 20:45</p>
-          </div>
-          <div class="act">
-            <span class="dur">5:05</span>
-            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=78CfgkD721Q&t=Marseille+v+Paris+FC&c=Ligue+1" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
-          </div>
-        </div>
-
-      </li>
-      </ul>
-    </section>
+  <p class="dead-note">Not playable this week: Marseille v Paris FC. The upload blocks embedding, so it would only open on YouTube, where the title gives the score away.</p>
 
   <footer>
-    Built 10:08 &middot; fixtures and highlight links resolved from FotMob,
-    verified playable from Spain via the YouTube Data API.<br>
-    Selection is prestige-weighted per league. The generator sees the scores; nothing downstream does.<br>
-    Each link opens a player page that stays covered until the footage is rolling, so YouTube&rsquo;s
-    thumbnail and title never appear.
+    Built Mon 7 Sep, 10:46 &middot; fixtures and highlight links from FotMob,
+    every video load-tested before it was included.<br>
+    The generator sees the scores; nothing downstream does.
   </footer>
 </div>
 
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+(function () {
+  var QUEUE = [{"v": "af99CJ4f_yc", "t": "Arsenal v Chelsea", "c": "Premier League", "d": 120}, {"v": "Qn1UCyqzzBI", "t": "Everton v Manchester United", "c": "Premier League", "d": 141}, {"v": "dZgMJj37UNM", "t": "Ipswich Town v Liverpool", "c": "Premier League", "d": 136}, {"v": "HpeCCugYpsU", "t": "Newcastle United v AFC Bournemouth", "c": "Premier League", "d": 124}, {"v": "Opwiy1igObg", "t": "Real Betis v Real Madrid", "c": "LaLiga", "d": 210}, {"v": "_XYstO1MTdg", "t": "Athletic Club v Atl\u00e9tico Madrid", "c": "LaLiga", "d": 210}, {"v": "yDrJbKNnk9E", "t": "Inter v Napoli", "c": "Serie A", "d": 178}, {"v": "BcGJd0fz4WY", "t": "Roma v Atalanta", "c": "Serie A", "d": 147}, {"v": "ijK7-NuPkzk", "t": "Werder Bremen v RB Leipzig", "c": "Bundesliga", "d": 179}, {"v": "bpC3DSulZAw", "t": "Hoffenheim v Borussia Dortmund", "c": "Bundesliga", "d": 241}, {"v": "r6jl85nSRyA", "t": "Paris Saint-Germain v Monaco", "c": "Ligue 1", "d": 490}];
+  var KEY = "wu.watched.v1";
+
+  var stage = document.getElementById("stage");
+  var cover = document.getElementById("cover");
+  var label = document.getElementById("coverLabel");
+  var nowLg = document.getElementById("nowLg");
+  var nowFx = document.getElementById("nowFx");
+  var tally = document.getElementById("tally");
+
+  var player = null, apiReady = false, ready = false;
+  var idx = 0, wantPlay = false, chain = false;
+
+  function watched() {
+    try { return JSON.parse(localStorage.getItem(KEY) || "[]"); }
+    catch (e) { return []; }
+  }
+  function markWatched(v) {
+    try {
+      var w = watched();
+      if (w.indexOf(v) < 0) { w.push(v); localStorage.setItem(KEY, JSON.stringify(w)); }
+    } catch (e) {}
+    paint();
+  }
+
+  function paint() {
+    var w = watched();
+    var left = 0, done = 0;
+    QUEUE.forEach(function (q) {
+      var seen = w.indexOf(q.v) >= 0;
+      if (seen) done++; else left += q.d;
+      var row = document.querySelector('.row[data-v="' + q.v + '"]');
+      if (row) {
+        row.classList.toggle("done", seen);
+        row.classList.toggle("playing", q.v === QUEUE[idx].v);
+      }
+    });
+    var mins = Math.round(left / 60);
+    tally.textContent = done + " of " + QUEUE.length + " watched \u00b7 " +
+                        (left ? mins + " min left" : "all done");
+  }
+
+  function show(i) {
+    idx = Math.max(0, Math.min(i, QUEUE.length - 1));
+    var q = QUEUE[idx];
+    nowLg.textContent = q.c;
+    nowFx.textContent = q.t;
+    label.textContent = "Play highlights";
+    cover.hidden = false;
+    paint();
+    if (player && ready) {
+      player.cueVideoById(q.v);
+      if (wantPlay) player.playVideo();
+    }
+  }
+
+  function killCaptions(p) {
+    try { p.unloadModule("captions"); } catch (e) {}
+    try { p.unloadModule("cc"); } catch (e) {}
+  }
+
+  window.onYouTubeIframeAPIReady = function () { apiReady = true; boot(); };
+
+  function boot() {
+    if (player || !apiReady) return;
+    var host = document.createElement("div");
+    host.id = "yt";
+    stage.appendChild(host);
+    player = new YT.Player("yt", {
+      videoId: QUEUE[idx].v,
+      playerVars: {
+        rel: 0, modestbranding: 1, playsinline: 1, iv_load_policy: 3,
+        cc_load_policy: 0, cc_lang_pref: "en", autoplay: 0, origin: location.origin
+      },
+      events: {
+        onReady: function (e) {
+          ready = true; killCaptions(e.target);
+          if (wantPlay) e.target.playVideo();
+        },
+        onStateChange: function (e) {
+          if (e.data === YT.PlayerState.PLAYING) {
+            cover.hidden = true; killCaptions(player);
+          }
+          if (e.data === YT.PlayerState.ENDED) {
+            markWatched(QUEUE[idx].v);
+            if (chain && idx < QUEUE.length - 1) { wantPlay = true; show(idx + 1); }
+            else { label.textContent = "Watch again"; cover.hidden = false; }
+          }
+        },
+        onError: function () {
+          label.textContent = "Unavailable \u2014 skipping";
+          if (idx < QUEUE.length - 1) { show(idx + 1); }
+        }
+      }
+    });
+  }
+
+  document.querySelectorAll(".row[data-v]").forEach(function (row) {
+    row.addEventListener("click", function () {
+      var i = QUEUE.findIndex(function (q) { return q.v === row.dataset.v; });
+      if (i < 0) return;
+      wantPlay = true; chain = false;
+      show(i);
+      stage.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  cover.addEventListener("click", function () {
+    wantPlay = true;
+    if (ready && player) { player.playVideo(); label.textContent = "Starting"; }
+    else { label.textContent = "Loading"; boot(); }
+  });
+
+  document.getElementById("playAll").addEventListener("click", function () {
+    chain = true; wantPlay = true;
+    var w = watched();
+    var first = QUEUE.findIndex(function (q) { return w.indexOf(q.v) < 0; });
+    show(first < 0 ? 0 : first);
+    if (ready && player) player.playVideo();
+    stage.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  document.getElementById("next").addEventListener("click", function () {
+    markWatched(QUEUE[idx].v);
+    wantPlay = true;
+    show(idx + 1);
+  });
+
+  document.getElementById("reset").addEventListener("click", function () {
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    paint();
+  });
+
+  // Deep link from the email: ?v=<id> opens on that match.
+  var want = new URLSearchParams(location.search).get("v");
+  var start = want ? QUEUE.findIndex(function (q) { return q.v === want; }) : -1;
+  show(start < 0 ? 0 : start);
+  if (window.YT && YT.Player) { apiReady = true; boot(); }
+})();
+</script>
