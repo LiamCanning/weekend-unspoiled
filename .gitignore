@@ -1,0 +1,6 @@
+# The compiled show is broadcast footage for the LAN only. It must never be
+# published here, and run_weekly.sh does `git add -A` in this directory.
+*.mp4
+*.mkv
+*.mov
+*.m4v
