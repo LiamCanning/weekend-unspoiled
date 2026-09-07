@@ -389,8 +389,8 @@
     cover.hidden = false;
     paint();
     if (player && ready) {
-      player.cueVideoById(q.v);
-      if (wantPlay) player.playVideo();
+      if (wantPlay) player.loadVideoById(q.v);
+      else player.cueVideoById(q.v);
     }
   }
 
@@ -455,8 +455,10 @@
     chain = true; wantPlay = true;
     var w = watched();
     var first = QUEUE.findIndex(function (q) { return w.indexOf(q.v) < 0; });
-    show(first < 0 ? 0 : first);
-    if (ready && player) player.playVideo();
+    if (first < 0) first = 0;
+    // Already the loaded video and nothing has played yet: just start it.
+    if (first === idx && player && ready) { show(first); player.playVideo(); }
+    else { show(first); }
     stage.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
