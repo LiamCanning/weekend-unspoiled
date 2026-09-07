@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Highlights</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; background:#0B1211; color:#E4EDE8; min-height:100vh;
+    font-family:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    display:flex; flex-direction:column; align-items:center;
+    justify-content:center; padding:24px 16px; gap:16px;
+  }
+  .head, .foot, .stage { width:100%; max-width:900px; }
+  .kicker {
+    font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:11px;
+    letter-spacing:.16em; text-transform:uppercase; color:#43C395; margin:0 0 6px;
+  }
+  h1 { font-size:clamp(20px,4vw,28px); font-weight:600; margin:0; letter-spacing:-.01em; }
+
+  .stage { position:relative; aspect-ratio:16/9; background:#0B1211;
+           border:1px solid #2A3833; border-radius:4px; overflow:hidden; }
+  .stage iframe { position:absolute; inset:0; width:100%; height:100%; border:0; z-index:1; }
+
+  /* Opaque until real frames are rolling. Hides YouTube's poster art, which
+     routinely has the scoreline painted into it, and the title bar. */
+  .cover {
+    position:absolute; inset:0; z-index:5; background:#0B1211;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:14px; cursor:pointer; border:0; width:100%; color:inherit;
+    font:inherit; text-align:center; padding:20px;
+  }
+  .cover[hidden] { display:none; }
+  .cover .play {
+    width:66px; height:66px; border-radius:50%; background:#43C395;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .cover .play::after {
+    content:""; width:0; height:0; margin-left:5px;
+    border-left:20px solid #07130F;
+    border-top:13px solid transparent; border-bottom:13px solid transparent;
+  }
+  .cover .label {
+    font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:11px;
+    letter-spacing:.16em; text-transform:uppercase; color:#8A9C94;
+  }
+  .cover:hover .play { filter:brightness(1.08); }
+  .cover:focus-visible { outline:2px solid #43C395; outline-offset:-4px; }
+  .cover .spin { font-size:13px; color:#8A9C94; }
+
+  /* Belt and braces once playing: kills the title bar hotspot. */
+  .titlebar {
+    position:absolute; top:0; left:0; right:0; height:60px; z-index:4;
+    background:linear-gradient(#0B1211 55%, rgba(11,18,17,0));
+    pointer-events:none;
+  }
+  .hotspot { position:absolute; top:0; left:0; right:80px; height:52px; z-index:4; }
+
+  .foot { font-size:12.5px; color:#8A9C94; line-height:1.6; }
+  .foot a { color:#43C395; }
+  .err { color:#D9A167; font-size:14px; }
+</style>
+</head>
+<body>
+  <div class="head">
+    <p class="kicker" id="kicker">Highlights</p>
+    <h1 id="title">Match highlights</h1>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="titlebar"></div>
+    <div class="hotspot"></div>
+    <button class="cover" id="cover" type="button">
+      <span class="play" aria-hidden="true"></span>
+      <span class="label" id="coverLabel">Play highlights</span>
+    </button>
+  </div>
+
+  <p class="foot">Kept clean on purpose: the thumbnail and title on YouTube both carry the score, so neither is ever shown here.</p>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  var q = new URLSearchParams(location.search);
+  var VID = (q.get("v") || "").replace(/[^A-Za-z0-9_-]/g, "").slice(0, 11);
+  var T = q.get("t") || "Match highlights";
+  var C = q.get("c") || "Highlights";
+
+  document.getElementById("title").textContent = T;
+  document.getElementById("kicker").textContent = C;
+  document.title = T;
+
+  var cover = document.getElementById("cover");
+  var label = document.getElementById("coverLabel");
+  var stage = document.getElementById("stage");
+  var player = null, apiReady = false, wantPlay = false;
+
+  if (!VID) {
+    cover.innerHTML = '<span class="err">This link is missing its video id.</span>';
+    cover.disabled = true;
+  }
+
+  function onYouTubeIframeAPIReady() { apiReady = true; if (wantPlay) boot(); }
+  window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+
+  function boot() {
+    if (player) { player.playVideo(); return; }
+    var host = document.createElement("div");
+    host.id = "yt";
+    stage.appendChild(host);
+    player = new YT.Player("yt", {
+      videoId: VID,
+      playerVars: { rel: 0, modestbranding: 1, playsinline: 1,
+                    iv_load_policy: 3, autoplay: 1 },
+      events: {
+        onStateChange: function (e) {
+          // Only lift the cover once actual video frames are on screen.
+          if (e.data === YT.PlayerState.PLAYING) cover.hidden = true;
+          // Re-cover at the end: YouTube's end screen shows related
+          // thumbnails, which spoil other matches.
+          if (e.data === YT.PlayerState.ENDED) {
+            label.textContent = "Watch again";
+            cover.hidden = false;
+          }
+        },
+        onError: function () {
+          cover.innerHTML = '<span class="err">This video can\'t be embedded. ' +
+            'Open it on YouTube if you don\'t mind seeing the score.</span>';
+        }
+      }
+    });
+  }
+
+  cover.addEventListener("click", function () {
+    if (!VID) return;
+    label.textContent = "Loading";
+    wantPlay = true;
+    if (apiReady) boot();
+  });
+</script>
+</body>
+</html>

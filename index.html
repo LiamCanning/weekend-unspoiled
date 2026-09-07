@@ -1,0 +1,324 @@
+<title>Weekend Unspoiled</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg:#E7EBE8; --surface:#FDFEFD; --line:#CBD5CF; --line-soft:#DDE4DF;
+    --ink:#0F1D18; --muted:#5A6C64; --accent:#0C6B4C; --accent-ink:#FFFFFF;
+    --warn:#8A5320; --warn-bg:#F0E2D2;
+    --shadow:0 1px 2px rgba(15,29,24,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:#0B1211; --surface:#131C19; --line:#2A3833; --line-soft:#1E2A26;
+      --ink:#E4EDE8; --muted:#8A9C94; --accent:#43C395; --accent-ink:#07130F;
+      --warn:#D9A167; --warn-bg:#2C2318;
+      --shadow:none;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:#0B1211; --surface:#131C19; --line:#2A3833; --line-soft:#1E2A26;
+    --ink:#E4EDE8; --muted:#8A9C94; --accent:#43C395; --accent-ink:#07130F;
+    --warn:#D9A167; --warn-bg:#2C2318;
+    --shadow:none;
+  }
+
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size:16px; line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap { max-width:620px; margin:0 auto; padding:32px 20px 72px; }
+
+  header { display:flex; flex-direction:column; gap:14px; padding-bottom:22px; }
+  .stamp {
+    align-self:flex-start; font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); border:1px solid currentColor; border-radius:2px;
+    padding:4px 9px;
+  }
+  h1 {
+    font-family:"Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+    font-weight:700; font-size:clamp(34px,8vw,46px); line-height:1.02;
+    letter-spacing:-.02em; margin:0; text-wrap:balance;
+  }
+  .standfirst { margin:0; color:var(--muted); max-width:46ch; }
+  .standfirst b { color:var(--ink); font-weight:500; }
+  .ledger {
+    display:flex; gap:0; margin-top:6px; border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .ledger div { flex:1; padding:12px 0; }
+  .ledger div + div { border-left:1px solid var(--line-soft); padding-left:14px; }
+  .ledger dt {
+    font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:10px;
+    letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin:0;
+  }
+  .ledger dd {
+    margin:3px 0 0; font-family:"Bricolage Grotesque", sans-serif; font-weight:700;
+    font-size:22px; font-variant-numeric:tabular-nums;
+  }
+
+  .league { margin-top:38px; }
+  .eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:4px; }
+  .eyebrow span {
+    font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:11px;
+    letter-spacing:.16em; text-transform:uppercase; color:var(--muted);
+  }
+  .eyebrow i { flex:1; height:1px; background:var(--line); }
+  .eyebrow .n { color:var(--accent); }
+
+  .matches { list-style:none; margin:0; padding:0; }
+  .match { border-bottom:1px solid var(--line-soft); }
+  .row { display:flex; align-items:flex-start; gap:16px; padding:16px 0; }
+  .who { flex:1; min-width:0; }
+  .who h3 {
+    font-family:"Bricolage Grotesque", sans-serif; font-weight:500;
+    font-size:20px; line-height:1.2; letter-spacing:-.01em; margin:0;
+    text-wrap:balance;
+  }
+  .when {
+    margin:5px 0 0; font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:11.5px; color:var(--muted); display:flex; flex-wrap:wrap;
+    align-items:center; gap:8px;
+  }
+  .chip {
+    background:var(--warn-bg); color:var(--warn); border-radius:2px;
+    padding:2px 6px; font-size:10px; letter-spacing:.04em;
+  }
+  .act { display:flex; flex-direction:column; align-items:flex-end; gap:7px; flex-shrink:0; }
+  .dur {
+    font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:12px;
+    color:var(--muted); font-variant-numeric:tabular-nums;
+  }
+  .go {
+    display:inline-flex; align-items:center; gap:7px; font:inherit; font-size:13px;
+    background:var(--accent); color:var(--accent-ink); border:0; border-radius:3px;
+    padding:7px 13px; cursor:pointer; text-decoration:none; box-shadow:var(--shadow);
+  }
+  .go:hover { filter:brightness(1.08); }
+  .go:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
+  .go.out { background:transparent; color:var(--warn); border:1px solid var(--warn); }
+  .go.dead { background:transparent; color:var(--muted); border:1px dashed var(--line); cursor:default; }
+  .tri {
+    width:0; height:0; border-left:7px solid currentColor;
+    border-top:4.5px solid transparent; border-bottom:4.5px solid transparent;
+  }
+  .go.dead .tri { display:none; }
+
+
+  footer {
+    margin-top:46px; padding-top:18px; border-top:1px solid var(--line);
+    font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:11px;
+    color:var(--muted); line-height:1.7;
+  }
+  @media (prefers-reduced-motion:reduce) { * { transition:none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="stamp">Results embargoed</span>
+    <h1>The weekend, without the scores</h1>
+    <p class="standfirst">Twelve matches from the top five, picked before kick-off on who was
+      playing, never on how it went. <b>Nothing on this page tells you a result.</b></p>
+    <dl class="ledger">
+      <div><dt>Matches</dt><dd>12</dd></div>
+      <div><dt>Runtime</dt><dd>42 min</dd></div>
+      <div><dt>Leagues</dt><dd>5</dd></div>
+    </dl>
+  </header>
+
+    <section class="league">
+      <div class="eyebrow"><span>Premier League</span><i></i><span class="n">4</span></div>
+      <ul class="matches">
+      <li class="match">
+        <div class="row">
+          <div class="who">
+            <h3>Arsenal v Chelsea</h3>
+            <p class="when">Sun 6 Sep, 17:30</p>
+          </div>
+          <div class="act">
+            <span class="dur">2:00</span>
+            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=nALnEAhBCY4&t=Arsenal+v+Chelsea&c=Premier+League" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
+          </div>
+        </div>
+
+      </li>
+      <li class="match">
+        <div class="row">
+          <div class="who">
+            <h3>Everton v Manchester United</h3>
+            <p class="when">Sun 6 Sep, 15:00</p>
+          </div>
+          <div class="act">
+            <span class="dur">2:21</span>
+            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=Qn1UCyqzzBI&t=Everton+v+Manchester+United&c=Premier+League" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
+          </div>
+        </div>
+
+      </li>
+      <li class="match">
+        <div class="row">
+          <div class="who">
+            <h3>Ipswich Town v Liverpool</h3>
+            <p class="when">Fri 4 Sep, 21:00</p>
+          </div>
+          <div class="act">
+            <span class="dur">2:16</span>
+            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=dZgMJj37UNM&t=Ipswich+Town+v+Liverpool&c=Premier+League" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
+          </div>
+        </div>
+
+      </li>
+      <li class="match">
+        <div class="row">
+          <div class="who">
+            <h3>Manchester City v Coventry City</h3>
+            <p class="when">Sat 5 Sep, 16:00<span class="chip">spoils: no embed allowed</span></p>
+          </div>
+          <div class="act">
+            <span class="dur">3:29</span>
+            <a class="go out" href="https://www.youtube.com/watch?v=Wi5InREhnKQ" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>YouTube</a>
+          </div>
+        </div>
+
+      </li>
+      </ul>
+    </section>
+    <section class="league">
+      <div class="eyebrow"><span>LaLiga</span><i></i><span class="n">2</span></div>
+      <ul class="matches">
+      <li class="match">
+        <div class="row">
+          <div class="who">
+            <h3>Real Betis v Real Madrid</h3>
+            <p class="when">Fri 4 Sep, 21:00</p>
+          </div>
+          <div class="act">
+            <span class="dur">3:30</span>
+            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=Opwiy1igObg&t=Real+Betis+v+Real+Madrid&c=LaLiga" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
+          </div>
+        </div>
+
+      </li>
+      <li class="match">
+        <div class="row">
+          <div class="who">
+            <h3>Athletic Club v Atlético Madrid</h3>
+            <p class="when">Sat 5 Sep, 16:15</p>
+          </div>
+          <div class="act">
+            <span class="dur">3:30</span>
+            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=_XYstO1MTdg&t=Athletic+Club+v+Atl%C3%A9tico+Madrid&c=LaLiga" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
+          </div>
+        </div>
+
+      </li>
+      </ul>
+    </section>
+    <section class="league">
+      <div class="eyebrow"><span>Serie A</span><i></i><span class="n">2</span></div>
+      <ul class="matches">
+      <li class="match">
+        <div class="row">
+          <div class="who">
+            <h3>Inter v Napoli</h3>
+            <p class="when">Sat 5 Sep, 18:00</p>
+          </div>
+          <div class="act">
+            <span class="dur">2:58</span>
+            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=yDrJbKNnk9E&t=Inter+v+Napoli&c=Serie+A" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
+          </div>
+        </div>
+
+      </li>
+      <li class="match">
+        <div class="row">
+          <div class="who">
+            <h3>Roma v Atalanta</h3>
+            <p class="when">Sat 5 Sep, 20:45</p>
+          </div>
+          <div class="act">
+            <span class="dur">2:27</span>
+            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=BcGJd0fz4WY&t=Roma+v+Atalanta&c=Serie+A" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
+          </div>
+        </div>
+
+      </li>
+      </ul>
+    </section>
+    <section class="league">
+      <div class="eyebrow"><span>Bundesliga</span><i></i><span class="n">2</span></div>
+      <ul class="matches">
+      <li class="match">
+        <div class="row">
+          <div class="who">
+            <h3>Werder Bremen v RB Leipzig</h3>
+            <p class="when">Sat 5 Sep, 15:30</p>
+          </div>
+          <div class="act">
+            <span class="dur">2:59</span>
+            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=ijK7-NuPkzk&t=Werder+Bremen+v+RB+Leipzig&c=Bundesliga" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
+          </div>
+        </div>
+
+      </li>
+      <li class="match">
+        <div class="row">
+          <div class="who">
+            <h3>Hoffenheim v Borussia Dortmund</h3>
+            <p class="when">Sat 5 Sep, 15:30</p>
+          </div>
+          <div class="act">
+            <span class="dur">4:01</span>
+            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=bpC3DSulZAw&t=Hoffenheim+v+Borussia+Dortmund&c=Bundesliga" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
+          </div>
+        </div>
+
+      </li>
+      </ul>
+    </section>
+    <section class="league">
+      <div class="eyebrow"><span>Ligue 1</span><i></i><span class="n">2</span></div>
+      <ul class="matches">
+      <li class="match">
+        <div class="row">
+          <div class="who">
+            <h3>Paris Saint-Germain v Monaco</h3>
+            <p class="when">Fri 4 Sep, 21:05</p>
+          </div>
+          <div class="act">
+            <span class="dur">8:10</span>
+            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=r6jl85nSRyA&t=Paris+Saint-Germain+v+Monaco&c=Ligue+1" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
+          </div>
+        </div>
+
+      </li>
+      <li class="match">
+        <div class="row">
+          <div class="who">
+            <h3>Marseille v Paris FC</h3>
+            <p class="when">Sun 6 Sep, 20:45</p>
+          </div>
+          <div class="act">
+            <span class="dur">5:05</span>
+            <a class="go" href="https://liamcanning.github.io/weekend-unspoiled/watch.html?v=78CfgkD721Q&t=Marseille+v+Paris+FC&c=Ligue+1" target="_blank" rel="noopener"><span class="tri" aria-hidden="true"></span>Watch</a>
+          </div>
+        </div>
+
+      </li>
+      </ul>
+    </section>
+
+  <footer>
+    Built 10:08 &middot; fixtures and highlight links resolved from FotMob,
+    verified playable from Spain via the YouTube Data API.<br>
+    Selection is prestige-weighted per league. The generator sees the scores; nothing downstream does.<br>
+    Each link opens a player page that stays covered until the footage is rolling, so YouTube&rsquo;s
+    thumbnail and title never appear.
+  </footer>
+</div>
+
