@@ -350,6 +350,7 @@
 
   var player = null, apiReady = false, ready = false;
   var idx = 0, wantPlay = false, chain = false;
+  var warming = false, warmed = false;
 
   function watched() {
     try { return JSON.parse(localStorage.getItem(KEY) || "[]"); }
@@ -389,9 +390,16 @@
     cover.hidden = false;
     paint();
     if (player && ready) {
-      if (wantPlay) player.loadVideoById(q.v);
-      else player.cueVideoById(q.v);
+      warmed = false; warming = false;
+      if (wantPlay) { player.loadVideoById(q.v); }
+      else { player.cueVideoById(q.v); setTimeout(warm, 400); }
     }
+  }
+
+  function warm() {
+    if (warmed || warming || wantPlay || !player || !ready) return;
+    warming = true;
+    try { player.mute(); player.playVideo(); } catch (e) { warming = false; }
   }
 
   function killCaptions(p) {
@@ -415,10 +423,19 @@
       events: {
         onReady: function (e) {
           ready = true; killCaptions(e.target);
-          if (wantPlay) e.target.playVideo();
+          if (wantPlay) { e.target.playVideo(); }
+          else { warm(); }
         },
         onStateChange: function (e) {
           if (e.data === YT.PlayerState.PLAYING) {
+            // The warm-up run must not reveal anything.
+            if (warming && !wantPlay) {
+              warming = false; warmed = true;
+              try { player.pauseVideo(); player.seekTo(0, true); player.unMute(); }
+              catch (err) {}
+              return;
+            }
+            warming = false;
             cover.hidden = true; killCaptions(player);
           }
           if (e.data === YT.PlayerState.ENDED) {
